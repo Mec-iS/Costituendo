@@ -1,25 +1,20 @@
-from google.appengine.ext import db
-from google.appengine.ext.db import polymodel
-import json
-from google.appengine.api import memcache
-
-
 # GOOGLE DATASTORE MODELS
 
 class Articolo(db.Model):
     '''
        Classe che definisce un qualunque Articolo di un qualunque Codice
     '''
-    numero               = db.StringProperty(required = True)
-    testo                = db.StringProperty(required = True)
-    argomenti            = db.StringListProperty(default=[])
+    numero               = db.IntegerProperty(required = True)
+    testo                = db.StringProperty(required = True, multiline=True)
+    argomenti            = db.ListProperty(db.Key, default=[])
     Codice               = db.StringProperty(required = True, choices=['Costituzione', 'CodiceCivile'])
     Parte                = db.StringProperty(default='None', choices=['PrincipiFondamentali', 'Prima', 'Seconda','Terza', 'Quarta', 'Quinta'])
     Titolo               = db.StringProperty(default='None', choices=['I', 'II','III', 'IV', 'V', 'VI', 'VII'])
     Libro                = db.StringProperty(default='None', choices=['I', 'II','III', 'IV', 'V', 'VI', 'VII'])
     Sezione              = db.StringProperty(default='None', choices=['I', 'II','III', 'IV', 'V', 'VI', 'VII'])
     Capo                 = db.StringProperty(default='None', choices=['I', 'II','III', 'IV', 'V', 'VI', 'VII'])
-    risorse              = db.ListProperty(db.Key) # un articolo = + Risorse possibili
+    #risorse              = db.ListProperty(db.Key) # un articolo = + Risorse possibili 
+    #la prop risorse e' stata sostituita da un modello di ereditarieta' tra classe Articolo e classe Risorsa
 
 class Dettaglio(db.Expando):
     '''
@@ -30,7 +25,7 @@ class Dettaglio(db.Expando):
     
 class Risorsa(db.Model):
     '''
-       Classe che descrive una risorsa
+       Classe che descrive una risorsa, children di Articolo
     '''
     tipo                 = db.StringProperty(default='None', choices=['commento', 'Storia', 'multimedia', 'link', 'legge dello Stato'])
     testo                = db.StringProperty(default='None') # testo commento o spiegazione risorsa/link
@@ -38,13 +33,15 @@ class Risorsa(db.Model):
     autore               = db.ListProperty(db.Key) # una risorsa = + Autori possibili
     fonte                = db.ListProperty(db.Key) # una risorsa = + Fonti possibili
     dettagli             = db.ReferenceProperty(Dettaglio, collection_name='resource_details')
+    articolo             = db.Key()
     
 class Pagina(db.Model):
     '''
-       Classe che descrive il contenuto di una pagina riferita ad un articolo
+       Classe che descrive il contenuto di una pagina riferita ad un articolo, children di Articolo
     '''
-    articolo             = db.ReferenceProperty(Articolo, collection_name='wiki_article')
     title                = db.StringProperty(default='None')
+    page                 = db.StringProperty(default='None') # HTML string
+    articolo             = db.Key()
     
 class Fonte(db.Expando):
     '''
@@ -63,11 +60,7 @@ class Autore(db.Expando):
     dettagli            = db.ReferenceProperty(Dettaglio)
     
 class Argomento(db.Expando):
-    '''
-       Classe per il salvataggio delle tag che accompagnano ogni articolo
-    '''
     tag                 = db.StringProperty()
     dettagli             = db.ReferenceProperty(Dettaglio, collection_name='tag_details')
-    
     
     
