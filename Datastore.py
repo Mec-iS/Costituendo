@@ -63,6 +63,9 @@ class Autore(db.Expando):
     dettagli            = db.ReferenceProperty(Dettaglio)
     
 class Argomento(db.Expando):
+    '''
+       Classe per il salvataggio delle tag che accompagnano ogni articolo
+    '''
     tag                 = db.StringProperty()
     dettagli             = db.ReferenceProperty(Dettaglio, collection_name='tag_details')
     
