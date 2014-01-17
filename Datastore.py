@@ -1,11 +1,10 @@
-# GOOGLE DATASTORE MODELS
 
 class Articolo(db.Model):
     '''
        Classe che definisce un qualunque Articolo di un qualunque Codice
     '''
     numero               = db.IntegerProperty(required = True)
-    testo                = db.StringProperty(required = True, multiline=True)
+    testo                = db.TextProperty(required = True)
     argomenti            = db.ListProperty(db.Key, default=[])
     Codice               = db.StringProperty(required = True, choices=['Costituzione', 'CodiceCivile'])
     Parte                = db.StringProperty(default='None', choices=['PrincipiFondamentali', 'Prima', 'Seconda','Terza', 'Quarta', 'Quinta'])
@@ -27,7 +26,7 @@ class Risorsa(db.Model):
     '''
        Classe che descrive una risorsa, children di Articolo
     '''
-    tipo                 = db.StringProperty(default='None', choices=['commento', 'Storia', 'multimedia', 'link', 'legge dello Stato'])
+    tipo                 = db.StringProperty(default='None', choices=['parafrasi', 'commento', 'Storia', 'multimedia', 'link', 'legge dello Stato'])
     testo                = db.StringProperty(default='None') # testo commento o spiegazione risorsa/link
     url                  = db.StringProperty(default='None')
     autore               = db.ListProperty(db.Key) # una risorsa = + Autori possibili
@@ -62,5 +61,4 @@ class Autore(db.Expando):
 class Argomento(db.Expando):
     tag                 = db.StringProperty()
     dettagli             = db.ReferenceProperty(Dettaglio, collection_name='tag_details')
-    
     
