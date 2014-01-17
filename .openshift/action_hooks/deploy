@@ -6,5 +6,8 @@
 
 source $OPENSHIFT_HOMEDIR/python/virtenv/bin/activate
 
+echo "Executing 'python $OPENSHIFT_REPO_DIRwsgi/openshift/manage.py syncdb --noinput'"
+python "$OPENSHIFT_REPO_DIR"wsgi/openshift/manage.py syncdb --noinput
+
 echo "Executing 'python $OPENSHIFT_REPO_DIR/wsgi/openius/manage.py collectstatic --noinput'"
 python "$OPENSHIFT_REPO_DIR"wsgi/openius/manage.py collectstatic --noinput
