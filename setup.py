@@ -3,9 +3,9 @@
 from setuptools import setup
 
 setup(
-    name='YourAppName',
-    version='1.0',
-    description='OpenShift App',
+    name='OpenIUS',
+    version='0.1',
+    description='OpenIUS Application',
     author='Your Name',
     author_email='example@example.com',
     url='http://www.python.org/sigs/distutils-sig/',
