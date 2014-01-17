@@ -6,7 +6,7 @@ TABLE Articolo:
     numero               > INT(10) required=True
     testo                > TEXT required=True
     Codice               > VARCHAR(25) required = True choices?=['Costituzione', 'CodiceCivile']
-    Parte                > VARCHAR(10) choices?=['PrincipiFondamentali', 'Prima', 'Seconda','Terza', 'Quarta', 'Quinta']
+    Parte                > VARCHAR(10) choices?=['Principi Fondamentali', 'Prima', 'Seconda','Terza', 'Quarta', 'Quinta']
     Titolo               > VARCHAR(10) choices?=['I', 'II','III', 'IV', 'V', 'VI', 'VII']
     Libro                > VARCHAR(10) choices?=['I', 'II','III', 'IV', 'V', 'VI', 'VII']
     Sezione              > VARCHAR(10) choices?=['I', 'II','III', 'IV', 'V', 'VI', 'VII']
@@ -35,11 +35,12 @@ TABLE Risorsa:
     
 TABLE Pagina:
     '''
-       Tabella che descrive il contenuto di una pagina riferita ad un articolo
+       Tabella che descrive il contenuto di una pagina riferita ad un articolo con relativa cronologia
     '''
     id                   > INT(12)
     titolo               > VARCHAR(80) required=True
     html                 > TEXT # HTML string
+    versione             > FLOAT ?
     
 TABLE Fonte:
     '''
@@ -70,12 +71,12 @@ TABLE Openius:
     '''
        Tabella delle relazioni che vanno ad ordinare i dati presenti in Openius
     '''
-    id_articolo          > 
-    ids_risorsa          >
-    ids_autore           >
-    ids__fonte           >
-    ids_argomento        >
-    id_pagina_corrente   >
+    id_articolo          > FK # ID Articolo
+    ids_risorsa          > FK # array di ID risorse
+    ids_autore           > FK # array di ID autore
+    ids__fonte           > FK # array di ID fonte
+    ids_argomento        > FK # array di ID argomento
+    id_pagina_corrente   > FK # ID versione della pagina corrente
     
 
 
