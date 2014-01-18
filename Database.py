@@ -64,14 +64,14 @@ TABLE resource_fields:
 TABLE sources:          # Fonti delle Rirorse 
     id                  > INT 
     type_id             > FK(source_types)
-    name                > VARCHAR(50) # Reference array ['Giudice', 'Avvocato', 'Accademico', 'Governo', 'Parlamento'
+    name                > VARCHAR(50) required=True # Reference array ['Giudice', 'Avvocato', 'Accademico', 'Governo', 'Parlamento'
                                       #'Organo Giurisdizionale', 'TAR', 'Corte Costituzionale', 'Presidente della Repubblica',
                                       #'Commentatore', 'Costituizionalista', 'Giornalista', 'Redattore OPEN-IUS']
                                       
 TABLE source_type:      # Reference array: ['Legge dello Stato', 'Opinione', 'Dichiarazione',
                         #                     'Sentenza', 'Regolamento']
     id                  > INT
-    name                > VARCHAR(50)
+    name                > VARCHAR(50) required=True
     
 TABLE source_fields:    # ?
     id                  > INT
@@ -85,12 +85,12 @@ TABLE authors:          # Author can be a person or an institution (oppure facci
                         # Nel caso di Source=Governo Author=il/i Ministro/i per esempio)
     id                  > INT
     title_id            > FK(titles)
-    name                > VARCHAR(50) 
+    name                > VARCHAR(50) required=True
     surname             > VARCHAR(50)
     
 TABLE author_titles:
     id                  > INT
-    name                > VARCHAR(50) #['Governo', 'Parlamento', 'Prof.', 'Dott.', 'Avv.', 'Sig.', 'Sig.ra']
+    name                > VARCHAR(50) required=True #['Governo', 'Parlamento', 'Prof.', 'Dott.', 'Avv.', 'Sig.', 'Sig.ra']
 
 TABLE author_fields:
     id                  > INT
@@ -102,7 +102,7 @@ TABLE author_fields:
 
 TABLE topics:
     id                   > INT
-    name                 > VARCHAR(50)
+    name                 > VARCHAR(50) required=True
 
 TABLE topic_fields:
     id                  > INT
