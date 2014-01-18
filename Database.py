@@ -28,7 +28,7 @@ TABLE sections:
     law_id              > FK(laws) # Foreign Key pointing to the law which the section is part of
     parent_id           > FK(sections) default=0 # Section that contain this section (if none, 0 will appear)
     name                > VARCHAR(50) required=True # Name of the section
-    description         > VARVHAR(50) # Formal description of the section
+    description         > VARCHAR(50) # Formal description of the section
     order               > INT # Order to be able to sort in a selection
 
 TABLE articles:
