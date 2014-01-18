@@ -1,14 +1,32 @@
 ### Laws, sections and articles
 
 TABLE laws:
-    id                  > INT
-    name                > TEXT required=True
+    '''
+        Table to host all laws of a specific country. In this table only the main data will appear
+        
+        1, 'Costituzione', 1948, 0
+        2, 'Codice Civile', 19??, 0
+        3, 'Codice Penale', 19??, 0
+    '''
+    id                  > INT # Autoincremental ID of the law
+    name                > TEXT required=True # Name of the law
+    creation            > DATE #Creation date
+    repealed            > BOOL # Is the law still valid or has been repealed?
+    repeal_date         > DATE # Date of repeal (if it has been repealed)
 
 TABLE sections:
-    id                  > INT
-    law_id              > FK(laws)
-    parent_id           > FK(sections) default=0
-    name                > TEXT required=True
+    '''
+        Table to host all laws sections.
+
+        1, 1, 0, 'Principi fondamentali'
+        2, 1, 0, 'Parte prima'
+        3, 1, 2, 'Titolo I'
+        4, 1, 2, 'Titolo II'
+    '''
+    id                  > INT # Autoincremental ID of the section
+    law_id              > FK(laws) # Foreign Key pointing to the law which the section is part of
+    parent_id           > FK(sections) default=0 # Section that contain this section (if none, 0 will appear)
+    name                > TEXT required=True # Name of the section
 
 TABLE articles:
     id                  > INT
