@@ -64,7 +64,7 @@ TABLE resource_fields:  # questa sarebbe la tabella per i dettagli-risorsa?
 TABLE sources:          # Fonti delle Rirorse 
     id                  > INT
     type_id             > FK(source_types)
-    name                > VARCHAR(50) # Reference array ['Giudice', 'Avvocato', 'Accademico', 
+    name                > VARCHAR(50) # Reference array ['Giudice', 'Avvocato', 'Accademico', 'Governo', 'Parlamento'
                                       #'Organo Giurisdizionale', 'TAR', 'Corte Costituzionale', 'Presidente della Repubblica',
                                       #'Commentatore', 'Costituizionalista', 'Giornalista', 'Redattore OPEN-IUS', 'Utente']
                                       
