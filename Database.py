@@ -66,7 +66,7 @@ TABLE sources:          # Fonti delle Rirorse
     type_id             > FK(source_types)
     name                > VARCHAR(50) # Reference array ['Giudice', 'Avvocato', 'Accademico', 'Governo', 'Parlamento'
                                       #'Organo Giurisdizionale', 'TAR', 'Corte Costituzionale', 'Presidente della Repubblica',
-                                      #'Commentatore', 'Costituizionalista', 'Giornalista', 'Redattore OPEN-IUS', 'Utente']
+                                      #'Commentatore', 'Costituizionalista', 'Giornalista', 'Redattore OPEN-IUS']
                                       
 TABLE source_type:      # Reference array: ['Legge dello Stato', 'Opinione', 'Dichiarazione',
                         #                     'Sentenza', 'Regolamento']
