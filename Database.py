@@ -32,37 +32,37 @@ TABLE sections:
     order               > INT # Order to be able to sort in a selection
 
 TABLE articles:
-    id                  > INT
-    number              > INT required=True
-    text                > TEXT required=True
-    law_id              > FK(laws)
-    section_id          > FK(sections)
+    id                  > INT # Autoincremental ID of the article
+    number              > INT required=True # number of the article in the code
+    text                > TEXT required=True # full original text of the article
+    law_id              > FK(laws) # Foreign Key pointing to the law which the article is part of
+    section_id          > FK(sections) # Foreign Key pointing to the law which the section is part of
 
 ### Resources
 
 TABLE resources:
-    id                  > INT
-    category_id         > FK(resource_categories)
-    text                > TEXT required=True
-    url                 > VARCHAR(255)
-    author              > FK(authors)
-    source              > FK(sources)
+    id                  > INT # Autoincremental ID of the resource
+    category_id         > FK(resource_categories) # Foreign Key pointing to the right resource_category
+    text                > TEXT required=True # text of the contribution, in case of a web-resource an extract or a short introduction
+    url                 > VARCHAR(255) # URI if web-resourse, else None
+    author              > FK(authors) # Foreign Key pointing to the right author
+    source              > FK(sources) # Foreign Key pointing to the right source
     
 TABLE resource_categories: # reference array: ['esegesi', 'Storia', 'link', 'dottrina', 
                            #       'giurisprudenza', 'normativa', 'attualita', 'dati']
-    id                  > INT
+    id                  > INT 
     name                > VARCHAR(100) required=True    
 
-TABLE resource_fields:  # questa sarebbe la tabella per i dettagli-risorsa?
-    id                  > INT
-    resource_id         > FK(resources)
+TABLE resource_fields:  
+    id                  > INT # Autoincremental ID of the resource_field
+    resource_id         > FK(resources) # Foreign Key pointing to his resource 
     key                 > VARCHAR(50)
     value               > TEXT
 
 ### Sources
 
 TABLE sources:          # Fonti delle Rirorse 
-    id                  > INT
+    id                  > INT 
     type_id             > FK(source_types)
     name                > VARCHAR(50) # Reference array ['Giudice', 'Avvocato', 'Accademico', 'Governo', 'Parlamento'
                                       #'Organo Giurisdizionale', 'TAR', 'Corte Costituzionale', 'Presidente della Repubblica',
@@ -82,7 +82,7 @@ TABLE source_fields:    # ?
 ### Authors
 
 TABLE authors:          # Author can be a person or an institution (oppure facciamo scrivere il firmatario?
-                        # Nel caso d Source=Governo Author=il/i Ministro/i per esempio)
+                        # Nel caso di Source=Governo Author=il/i Ministro/i per esempio)
     id                  > INT
     title_id            > FK(titles)
     name                > VARCHAR(50) 
