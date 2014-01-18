@@ -6,26 +6,26 @@ TABLE laws:
 
 TABLE sections:
     id                  > INT
-    law_id              > FK (laws)
-    parent_id           > FK (sections) default=0
+    law_id              > FK(laws)
+    parent_id           > FK(sections) default=0
     name                > TEXT required=True
 
 TABLE articles:
     id                  > INT
     number              > INT required=True
     text                > TEXT required=True
-    law_id              > FK (laws)
-    section_id          > FK (sections)
+    law_id              > FK(laws)
+    section_id          > FK(sections)
 
 ### Resources
 
 TABLE resources:
     id                  > INT
-    category_id         > FK (resource_categories)
+    category_id         > FK(resource_categories)
     text                > TEXT required=True
     url                 > VARCHAR(255)
-    author              > FK (authors)
-    source              > FK (sources)
+    author              > FK(authors)
+    source              > FK(sources)
     
 TABLE resource_categories:
     id                  > INT
@@ -33,7 +33,7 @@ TABLE resource_categories:
 
 TABLE resource_fields:
     id                  > INT
-    resource_id         > FK (resources)
+    resource_id         > FK(resources)
     key                 > VARCHAR(50)
     value               > TEXT
 
@@ -41,7 +41,7 @@ TABLE resource_fields:
 
 TABLE sources:
     id                  > INT
-    type_id             > FK (source_types)
+    type_id             > FK(source_types)
     name                > VARCHAR(50)
 
 TABLE source_type:
@@ -50,7 +50,7 @@ TABLE source_type:
     
 TABLE source_fields:
     id                  > INT
-    source_id           > FK (sources)
+    source_id           > FK(sources)
     key                 > VARCHAR(50)
     value               > TEXT
 
@@ -75,7 +75,7 @@ TABLE author_fields:
 ### Topics
 
 TABLE topics:
-    id                   > INT(12)
+    id                   > INT
     name                 > VARCHAR(50)
 
 TABLE topic_fields:
