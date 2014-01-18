@@ -1,90 +1,101 @@
-TABLE Articolo:
-    '''
-       Tabella che definisce un qualunque Articolo di un qualunque Codice
-    '''
-    id                   > INT(12)
-    numero               > INT(10) required=True
-    testo                > TEXT required=True
-    Codice               > VARCHAR(25) required = True choices?=['Costituzione', 'CodiceCivile']
-    Parte                > VARCHAR(10) choices?=['Principi Fondamentali', 'Prima', 'Seconda','Terza', 'Quarta', 'Quinta']
-    Titolo               > VARCHAR(10) choices?=['I', 'II','III', 'IV', 'V', 'VI', 'VII']
-    Libro                > VARCHAR(10) choices?=['I', 'II','III', 'IV', 'V', 'VI', 'VII']
-    Sezione              > VARCHAR(10) choices?=['I', 'II','III', 'IV', 'V', 'VI', 'VII']
-    Capo                 > VARCHAR(10) choices?=['I', 'II','III', 'IV', 'V', 'VI', 'VII']
+### Laws, sections and articles
 
+TABLE laws:
+    id                  > INT
+    name                > TEXT required=True
 
-TABLE Dettaglio:
-    '''
-       Tabella che descrive i dettagli che possono accompagnare un Autore, una Fonte, una Risorsa
-    '''
-    id                   > INT(12)
-    riferito_a           > FK #(Fonte o  Autore o Argomento)
-    testo                > TEXT required=True
+TABLE sections:
+    id                  > INT
+    law_id              > FK (laws)
+    parent_id           > FK (sections) default=0
+    name                > TEXT required=True
+
+TABLE articles:
+    id                  > INT
+    number              > INT required=True
+    text                > TEXT required=True
+    law_id              > FK (laws)
+    section_id          > FK (sections)
+
+### Resources
+
+TABLE resources:
+    id                  > INT
+    category_id         > FK (resource_categories)
+    text                > TEXT required=True
+    url                 > VARCHAR(255)
+    author              > FK (authors)
+    source              > FK (sources)
     
-TABLE Risorsa:
-    '''
-       Tabella che descrive una risorsa
-    '''
-    id                   > INT(12)
-    categoria            > VARCHAR(50) required=True choices?=['esegesi', 'Storia', 'link', 'dottrina', 'giurisprudenza', 'normativa', 'attualita', 'dati']
-    contenuto            > TEXT required=True # testo commento o spiegazione risorsa/link
-    url                  > VARCHAR(80)
-    autore               > db.ListProperty(db.Key) # una risorsa = + Autori possibili
-    fonte                > db.ListProperty(db.Key) # una risorsa = + Fonti possibili
-    dettaglio            > FK #Dettaglio
-    
-TABLE Pagina:
-    '''
-       Tabella che descrive il contenuto di una pagina riferita ad un articolo con relativa cronologia
-    '''
-    id                   > INT(12)
-    titolo               > VARCHAR(80) required=True
-    html                 > TEXT # HTML string
-    versione             > FLOAT ?
-    
-TABLE Fonte:
-    '''
-       Tabella che descrive una fonte
-    '''
-    id                   > INT(12)
-    tipo                 > VARCHAR(50) required=True choices?=['Legge', 'Accademico', 'Commentatore', 'Costituizionalista', 'Giornalista',
-                                                         'Organo Giurisdizionale', 'TAR', 'Corte Costituzionale', 'Presidente della Repubblica']
-    dettaglio            > FK #Dettaglio
-  
-  
-TABLE Autore:
-    '''
-       Tabella che descrive un autore
-    '''
-    id                   > INT(12)
-    titolo               > VARCHAR(25) required=True choices?=['Governo', 'Parlamento', 'Prof.', 'Dott.', 'Avv.', 'Sig.', 'Sig.ra']
-    nome                 > VARCHAR(50)
-    cognome              > VARCHAR(50)
-    dettagli             > FK #Dettaglio
-    
-TABLE Argomento:
-    id                   > INT(12)
-    tag                  > VARCHAR(25)
-    dettaglio            > FK #Dettaglio
+TABLE resource_categories:
+    id                  > INT
+    name                > VARCHAR(100) required=True    
 
-TABLE Openius:
-    '''
-       Tabella delle relazioni che vanno ad ordinare i dati presenti in Openius
-    '''
-    id_articolo          > FK # ID Articolo
-    ids_risorsa          > FK # array di ID risorse
-    ids_autore           > FK # array di ID autore
-    ids__fonte           > FK # array di ID fonte
-    ids_argomento        > FK # array di ID argomento
-    id_pagina_corrente   > FK # ID versione della pagina corrente
+TABLE resource_fields:
+    id                  > INT
+    resource_id         > FK (resources)
+    key                 > VARCHAR(50)
+    value               > TEXT
+
+### Sources
+
+TABLE sources:
+    id                  > INT
+    type_id             > FK (source_types)
+    name                > VARCHAR(50)
+
+TABLE source_type:
+    id                  > INT
+    name                > VARCHAR(50)
     
+TABLE source_fields:
+    id                  > INT
+    source_id           > FK (sources)
+    key                 > VARCHAR(50)
+    value               > TEXT
 
+### Authors
 
-'''
-TABLE Dati:
-  #Possibile implementazione futura
+TABLE authors:
+    id                  > INT
+    title_id            > FK(titles)
+    name                > VARCHAR(50)
+    surname             > VARCHAR(50)
+    
+TABLE author_titles:
+    id                  > INT
+    name                > VARCHAR(50)
+
+TABLE author_fields:
+    id                  > INT
+    author_id           > FK(authors)
+    key                 > VARCHAR(50)
+    value               > TEXT
+
+### Topics
+
+TABLE topics:
     id                   > INT(12)
-    formato              > VARCHAR(20) choices?=['pdf', 'json', 'csv', 'xcl']
-    contenuto            >
-'''
+    name                 > VARCHAR(50)
 
+TABLE topic_fields:
+    id                  > INT
+    topic_id            > FK(topics)
+    key                 > VARCHAR(50)
+    value               > TEXT
+
+TABLE author_topic:
+    author_id           > FK(authors)
+    topic_id            > FK(topics)
+
+TABLE resource_topic:
+    resource_id         > FK(resources)
+    topic_id            > FK(topics)
+
+TABLE article_topic:
+    article_id          > FK(articles)
+    topic_id            > FK(topics)
+
+TABLE law_topic:
+    law_id              > FK(laws)
+    topic_id            > FK(topics)
