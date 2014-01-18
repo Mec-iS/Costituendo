@@ -126,6 +126,7 @@ TABLE law_topic:
     law_id              > FK(laws)
     topic_id            > FK(topics)
 
+#Serve una tabella users per autenticazione?
     
 '''
 TABLE Dati:
