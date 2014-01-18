@@ -10,7 +10,7 @@ TABLE laws:
     '''
     id                  > INT # Autoincremental ID of the law
     name                > TEXT required=True # Name of the law
-    creation            > DATE #Creation date
+    creation            > DATE # Creation date
     repealed            > BOOL # Is the law still valid or has been repealed?
     repeal_date         > DATE # Date of repeal (if it has been repealed)
 
@@ -18,15 +18,16 @@ TABLE sections:
     '''
         Table to host all laws sections.
 
-        1, 1, 0, 'Principi fondamentali'
-        2, 1, 0, 'Parte prima'
-        3, 1, 2, 'Titolo I'
-        4, 1, 2, 'Titolo II'
+        1, 1, 0, 'Principi fondamentali', 1
+        2, 1, 0, 'Parte prima', 1
+        3, 1, 2, 'Titolo I', 1
+        4, 1, 2, 'Titolo II', 2
     '''
     id                  > INT # Autoincremental ID of the section
     law_id              > FK(laws) # Foreign Key pointing to the law which the section is part of
     parent_id           > FK(sections) default=0 # Section that contain this section (if none, 0 will appear)
-    name                > TEXT required=True # Name of the section
+    name                > VARCHAR(50) required=True # Name of the section
+    order               > INT # Order to be able to sort in a selection
 
 TABLE articles:
     id                  > INT
