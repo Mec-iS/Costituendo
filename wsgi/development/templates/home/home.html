@@ -1,5 +1,18 @@
-<b>
-Yeah Django!
-<b>
-<br />
-let's <a href="/admin">admin </a>
+{% extends "layout.html" %}
+
+
+{% block body %}
+
+<p>
+Index<br/>
+<h2>OPEN IUS (Costituendo)</h2>
+</p>
+{% if message %}
+   {{message}}
+{% endif %}
+
+<p>
+<a href="/admin/">admin panel</a><br/>
+<a href="/admin/doc/">admin doc</a>
+</p>
+{% endblock %}

@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html style="display:none;">
+<head>
+{% if title %}
+    <title>{{title}}</title>
+{% else %}
+    <title>Open Ius - Le Regole del Gioco</title> 
+{% endif %}
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+{% if meta %}
+    <meta name="keywords" content="Giurisprudenza {{title}}">
+    <meta name="description" content="Leggi Decreti Regolamento Ministero Avvocatura Costituzione Stato {{title}}">
+{% else %}
+    <meta name="description" content="Leggi Decreti Regolamento Ministero Avvocatura Costituzione Stato">
+    <meta name="keywords" content="Leggi Decreti Regolamento Ministero Avvocatura Costituzione Stato">
+{% endif %}
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<!--[if lt IE 9]>
+         <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+</head>
+
+<body>
+<div class="container">
+
+<!-- PAGE CONTENT -->  
+{% block body %}
+{% endblock %}
+<!-- END -->
+
+</div>
+<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="/static/css/style.css">
+
+<script>
+toShow = document.getElementsByTagName("html")[0]
+toShow.style.display="block"
+</script>
+</body>
+</html>

@@ -5,7 +5,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^start/', 'openshift.views.start', name='articles'),
+    #url(r'^start/', 'openshift.views.start', name='articles'),
     url(r'^$', 'openshift.views.home', name='home'),
     # url(r'^openshift/', include('openshift.foo.urls')),
     
