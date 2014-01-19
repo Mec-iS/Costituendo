@@ -5,9 +5,9 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    #url(r'^start/', 'openshift.views.start', name='articles'),
-    url(r'^$', 'openshift.views.home', name='home'),
-    # url(r'^openshift/', include('openshift.foo.urls')),
+    #url(r'^start/', 'openius.views.start', name='articles'),
+    url(r'^$', 'openius.views.home', name='home'),
+    # url(r'^openius/', include('openshift.foo.urls')),
     
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
