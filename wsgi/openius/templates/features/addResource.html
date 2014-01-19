@@ -1,0 +1,116 @@
+{% extends "layout.html" %}
+
+
+{% block body %}
+<div class="row">
+<nav class="nav-bar navbar-default" role="navigation">
+<h2>Risorse collegate all&apos;articolo {{number}}</h2>
+<p class="jumbotron">Ogni risorsa &egrave; strettamente collegata ad un singolo articolo o comma di articolo</p>
+<ul class="nav navbar-nav">
+<li><a href="/home">Torna</a></li>
+<li><a href="/add/article">Aggiungi Articolo</a></li>
+</ul>
+<nav>
+</div>
+
+<div class="row">
+<table class="table">
+<tr>
+<th>Codice</th><th>Numero</th><th>Testo</th><th>Parte</th><th>Titolo</th><th>Libro</th><th>Sezione</th>
+</tr>
+
+  <tr>
+  <td>{{resource.Codice}}</td><td>{{resource.numero}}</td><td><p class="testo">{{resource.testo}}</p></td><td>{{resource.Parte}}</td><td>{{resource.Titolo}}</td><td>{{resource.Libro}}</td><td>{{resource.Sezione}}</td><td>{{resource.Capo}}</td>
+  </tr>
+</table>
+</div>
+
+<p class="jumbotron">Risorse:</p>
+
+<div class="row">
+<div class="col-md-10">
+<h4>Commento scelto</h4>
+<span class="help-block">commento dottrinale da fonte autorevole scelto dalla Redazione</span>
+</div>
+<div class="col-md-1">
+</div>
+</div>
+
+<div class="row">
+<div class="col-md-10">
+<h4>Storia</h4>
+<span class="help-block">cenni storici riguardo l'articolo</span>
+</div>
+<div class="col-md-1">
+<div class="form-group row resources">
+<a href="" class="btn btn-default">Aggiungi riferimento storico</a>
+</div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-md-10">
+<h4>Dottrina</h4>
+<span class="help-block">contributi degli studiosi riguardo l'articolo</span>
+</div>
+<div class="col-md-1">
+<div class="form-group row resources">
+<a href="" class="btn btn-default">Aggiungi dottrina</a>
+
+</div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-md-10">
+<h4>Giurisprudenza</h4>
+<span class="help-block">pronunce della Corte Costituzionale e organi giurisdizionali</span>
+</div>
+<div class="col-md-1">
+<div class="form-group row resources">
+<a href="" class="btn btn-default">Aggiungi giurisprudenza</a>
+</div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-md-10">
+<h4>Normativa collegata</h4>
+<span class="help-block">leggi, regolamenti, decreti applicativi dell'articolo</span>
+</div>
+<div class="col-md-1">
+<div class="form-group row resources">
+<a href="" class="btn btn-default">Aggiungi applicazione <br/>e riferimento normativo</a>
+</div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-md-10">
+<h4>Attualit&agrave; e Stampa</h4>
+<span class="help-block">fatti e notizie di attualit&agrave; che riguardano questo articolo</span>
+</div>
+<div class="col-md-1">
+<div class="form-group row resources">
+<a href="" class="btn btn-default">Attualit&agrave; e stampa</a>
+</div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-md-10">
+<h4>Link e multimedia</h4>
+<span class="help-block">risorsa audio-video o pdf o permalink</span>
+</div>
+<div class="col-md-1">
+<div class="form-group row resources">
+<a href="" class="btn btn-default">Aggiungi link multimediale</a>
+</div>
+</div>
+</div>
+
+
+
+
+
+{% endblock %}

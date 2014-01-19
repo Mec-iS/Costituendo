@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /database/
+Disallow: /JSON
+Disallow: /insertnew/
+Disallow: /delete/
+Disallow: /mail/
+

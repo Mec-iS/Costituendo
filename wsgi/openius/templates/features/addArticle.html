@@ -1,0 +1,117 @@
+{% extends "layout.html" %}
+
+
+{% block body %}
+
+<div class="row">
+<nav class="nav-bar navbar-default" role="navigation">
+<h2>Aggiungi Articolo</h2>
+<p class="jumbotron">Contribuisci a Open IUS</p>
+<ul class="nav navbar-nav">
+<li><a href="/home">Visualizza Lista Articoli</a></li>
+<li class="active"><a href="/add/article">Aggiungi Articolo</a></li>
+</ul>
+<nav>
+</div>
+
+<ul>
+<li>Nel caso di commi e/o paragrafi andare a capo e premere *quattro* volte spazio</li>
+<li>fate attenzione e controllate i campi prima di cliccare 'Salva'</li>
+<li>per ora, per eventuali correzioni di errori scrivete a me (Lorenzo)</li>
+</ul>
+<br/>
+
+<div class="row">
+{% if message %}
+    <span style="color:red;">{{message}}</span>
+{% endif %}
+<form id="article-form" name="article-form" method="POST" role="form"> 
+
+<div class="form-group col-md-10">
+<label for="testo" class="atolbl">Testo</label>
+<span class="help-block">obbligatorio</span>
+<span class="help-block">rispettare la spaziatura (es. lo spazio va inserito dopo la virgola, non prima) e la punteggiatura del testo originale</span>
+<textarea name="testo" class="textarea form-control"></textarea>
+</div>
+
+<div class="form-group col-md-3">
+<label for="codice">Codice</label>
+<span class="help-block">obbligatorio</span>
+<select name="codice" class="menu form-control"> 
+{% for c in form.Codice %}
+<option value="{{c}}">{{c}}</option> 
+{% endfor %}
+</select>
+</div>
+
+
+<div class="form-group col-md-3">
+<label for="numero">Numero Articolo</label> 
+<span class="help-block">obbligatorio, solo numeri interi</span>
+<input type="text" name="numero" class="text form-control">
+</div>
+
+</div>
+
+<div class="row">
+<div class="form-group col-md-2">
+<label for="parte">Parte</label>
+<select name="parte" class="menu form-control">
+<option value=""></option> 
+{% for c in form.Parte %}
+<option value="{{c}}">{{c}}</option> 
+{% endfor %}
+</select>
+</div>
+
+<div class="form-group col-md-1">
+<label for="titolo">Titolo</label>
+<select name="titolo" class="menu form-control">
+<option value=""></option> 
+{% for c in form.Titolo %}
+<option value="{{c}}">{{c}}</option> 
+{% endfor %}
+</select>
+</div> 
+
+<div class="form-group col-md-1">
+<label for="libro">Libro</label>
+<select name="libro" class="menu form-control">
+<option value=""></option> 
+{% for c in form.Libro %}
+<option value="{{c}}">{{c}}</option> 
+{% endfor %} 
+</select>
+</div> 
+
+<div class="form-group col-md-1">
+<label for="sezione">Sezione</label> 
+<select name="sezione" class="menu form-control">
+<option value=""></option> 
+{% for c in form.Sezione %}
+<option value="{{c}}">{{c}}</option> 
+{% endfor %}
+</select>
+</div>
+
+<div class="form-group col-md-1">
+<label for="capo">Capo</label> 
+<select name="capo" class="menu form-control">
+<option value=""></option> 
+{% for c in form.Capo %}
+<option value="{{c}}">{{c}}</option> 
+{% endfor %}</select>
+</div>
+
+</div>
+
+<div class="row" style=""> 
+
+<div class="form-group jumbotron">
+<button type="submit" class="btn btn-lg">Salva</button>
+</div>
+</div>
+</form> 
+
+<br/>
+{% endblock %}

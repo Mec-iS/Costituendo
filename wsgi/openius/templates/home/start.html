@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+
+{% block body %}
+
+<div class="row">
+<nav class="nav-bar navbar-default" role="navigation">
+<h2>Articoli nel db</h2>
+<p class="jumbotron">Ogni articolo &egrave; un&apos;entit&agrave; nel datastore di Open IUS</p>
+<ul class="nav navbar-nav">
+<li class="active"><a href="/home" >Visualizza Lista Articoli</a></li>
+<li><a href="/add/article">Aggiungi Articolo</a></li>
+</ul>
+<form class="navbar-form navbar-left" role="search" method="GET" action="/home/search">
+    <div class="form-group">
+      <input type="text" name="key" class="form-control" placeholder="Cerca nel testo">
+    </div>
+    <button type="submit" class="btn btn-default">Cerca</button>
+</form>
+<nav>
+</div>
+
+
+<table class="table">
+<tr>
+<th>Codice</th><th>Articolo</th><th>Testo</th><th>Parte</th><th>Titolo</th><th>Libro</th><th>Sezione</th>
+</tr>
+{% for r in results %}
+  <tr>
+  <td>{{r.Codice}}</td><td>{{r.numero}}</td><td><p class="testo">{{r.testo}}</p></td><td>{{r.Parte}}</td><td>{{r.Titolo}}</td><td>{{r.Libro}}</td><td>{{r.Sezione}}</td><td>{{r.Capo}}</td>
+  <td><a class="btn btn-default" href="add/resource?id={{r.ID}}">Vai alle risorse</a></td>
+  </tr>
+{% endfor%}
+<table>
+</div>
+
+
+{% endblock %}
