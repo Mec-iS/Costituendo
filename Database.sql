@@ -124,7 +124,7 @@ CREATE TABLE authors(
 /*
     AUTHORS has TITLES:
     function = ['Membro del Governo', 'Parlamentare', 'Parte del Collegio giudicante', 'Funzionario',
-                'Profesisonista', 'Cittadino']
+                'Professisonista', 'Cittadino']
     name =  ['Prof.', 'Dott.', 'Avv.', 'Sig.', 'Sig.ra']
 */
 CREATE TABLE author_titles(
