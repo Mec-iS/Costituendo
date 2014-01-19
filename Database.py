@@ -3,16 +3,22 @@ from django.db import models
 # !!! DEFAULT IS NULL=FALSE !!! 
 class Law(models.Model):
     id                   = models.AutoField(primary_key=True)
-    name                 = models.CharField(max_length=25)
+    name                 = models.CharField(max_length=50)
     became               = models.DateField()
+    
+    def __unicode__(self):
+        return self.name
 
 class Section(models.Model):
     id                   = models.AutoField(primary_key=True)
     law_id               = models.ForeignKey(Law)
-    parent_id            = models.ForeignKey('self')
-    name                 = models.CharField(max_length=50)
-    description          = models.CharField(max_length=50)
+    parent_id            = models.ForeignKey('self', null=True, blank=True, default=None)
+    name                 = models.CharField(max_length=140)
+    description          = models.CharField(max_length=140, blank=True, default='')
     order                = models.IntegerField()
+    
+    def __unicode__(self):
+        return self.name
     
 class Article(models.Model):
     id                   = models.AutoField(primary_key=True)
@@ -20,6 +26,9 @@ class Article(models.Model):
     text                 = models.TextField()
     law_id               = models.ForeignKey(Law)
     section_id           = models.ForeignKey(Section)
+    
+    def __unicode__(self):
+        return self.number
     
 class Resource(models.Model):
     id                   = models.AutoField(primary_key=True)
@@ -47,14 +56,6 @@ class UrlResource(Resource):
     description          = models.CharField(max_length=255)
     url                  = models.CharField(max_length=255)
 
-class DataResource(Resource):
-    CATEGORY = (
-       (u'pdf', u'pdf'),
-       (u'csv', u'csv'),
-       (u'json', u'json'),
-    )
-    file                = models.FileField(upload_to('uploads'))
-
 class Source(models.Model):
     TYPES = (
         (u'legge',       u'Legge dello Stato'),
@@ -66,9 +67,9 @@ class Source(models.Model):
     )
     referred_to          = models.ForeignKey(Resource)
     id                   = models.AutoField(primary_key=True)
-    type                 = models.CharField(max_length=25, choices=TYPES)
-    name                 = models.CharField(max_length=50, choices=TYPES)
-    details              = models.TextField(blank=True, deafult='')
+    type                 = models.CharField(max_length=50, choices=TYPES)
+    name                 = models.CharField(max_length=140, choices=TYPES)
+    details              = models.TextField(blank=True, default='')
 
 class Author(models.Model):
     TITLES = (
@@ -90,21 +91,30 @@ class Author(models.Model):
     )
     referred_to          = models.ForeignKey(Source)
     id                   = models.AutoField(primary_key=True)
-    title                = models.CharField(max_length=25, choices=TITLES)
-    name                 = models.CharField(max_length=50)
-    surname              = models.CharField(max_length=50)
-    function             = models.CharField(max_length=50, choices=FUNCTIONS)
-    details              = models.TextField(blank=True, deafult='')
+    title                = models.CharField(max_length=50, choices=TITLES)
+    name                 = models.CharField(max_length=140)
+    surname              = models.CharField(max_length=140)
+    function             = models.CharField(max_length=140, choices=FUNCTIONS)
+    details              = models.TextField(blank=True, default='')
     
 class Topic(models.Model):
     referred_to         = models.ForeignKey(Resource)
-    key                 = models.CharField(max_length=25, unique=True)
-    text                = models.TextField(blank=True, deafult='')
+    key                 = models.CharField(max_length=50, unique=True)
+    text                = models.TextField(blank=True, default='')
 
-class Page(models.Model)
+class Page(models.Model):
     id                  = models.AutoField(primary_key=True)
     slug                = models.SlugField(unique=True)
-    title               = models.CharField(max_length=80)
+    title               = models.CharField(max_length=140)
     version             = models.IntegerField(default=0)
     html                = models.TextField()
     
+'''
+class DataResource(Resource):
+    CATEGORY = (
+       (u'pdf', u'pdf'),
+       (u'csv', u'csv'),
+       (u'json', u'json'),
+    )
+    file                = models.FileField(upload_to('uploads'))
+'''
