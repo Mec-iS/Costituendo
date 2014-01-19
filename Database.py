@@ -1,90 +1,110 @@
-TABLE Articolo:
-    '''
-       Tabella che definisce un qualunque Articolo di un qualunque Codice
-    '''
-    id                   > INT(12)
-    numero               > INT(10) required=True
-    testo                > TEXT required=True
-    Codice               > VARCHAR(25) required = True choices?=['Costituzione', 'CodiceCivile']
-    Parte                > VARCHAR(10) choices?=['Principi Fondamentali', 'Prima', 'Seconda','Terza', 'Quarta', 'Quinta']
-    Titolo               > VARCHAR(10) choices?=['I', 'II','III', 'IV', 'V', 'VI', 'VII']
-    Libro                > VARCHAR(10) choices?=['I', 'II','III', 'IV', 'V', 'VI', 'VII']
-    Sezione              > VARCHAR(10) choices?=['I', 'II','III', 'IV', 'V', 'VI', 'VII']
-    Capo                 > VARCHAR(10) choices?=['I', 'II','III', 'IV', 'V', 'VI', 'VII']
+from django.db import models
 
+# !!! DEFAULT IS NULL=FALSE !!! 
+class Law(models.Model):
+    id                   = models.AutoField(primary_key=True)
+    name                 = models.CharField(max_length=25)
+    became               = models.DateField()
 
-TABLE Dettaglio:
-    '''
-       Tabella che descrive i dettagli che possono accompagnare un Autore, una Fonte, una Risorsa
-    '''
-    id                   > INT(12)
-    riferito_a           > FK #(Fonte o  Autore o Argomento)
-    testo                > TEXT required=True
+class Section(models.Model):
+    id                   = models.AutoField(primary_key=True)
+    law_id               = models.ForeignKey(Law)
+    parent_id            = models.ForeignKey('self')
+    name                 = models.CharField(max_length=50)
+    description          = models.CharField(max_length=50)
+    order                = models.IntegerField()
     
-TABLE Risorsa:
-    '''
-       Tabella che descrive una risorsa
-    '''
-    id                   > INT(12)
-    categoria            > VARCHAR(50) required=True choices?=['esegesi', 'Storia', 'link', 'dottrina', 'giurisprudenza', 'normativa', 'attualita', 'dati']
-    contenuto            > TEXT required=True # testo commento o spiegazione risorsa/link
-    url                  > VARCHAR(80)
-    autore               > db.ListProperty(db.Key) # una risorsa = + Autori possibili
-    fonte                > db.ListProperty(db.Key) # una risorsa = + Fonti possibili
-    dettaglio            > FK #Dettaglio
+class Article(models.Model):
+    id                   = models.AutoField(primary_key=True)
+    number               = models.IntegerField()
+    text                 = models.TextField()
+    law_id               = models.ForeignKey(Law)
+    section_id           = models.ForeignKey(Section)
     
-TABLE Pagina:
-    '''
-       Tabella che descrive il contenuto di una pagina riferita ad un articolo con relativa cronologia
-    '''
-    id                   > INT(12)
-    titolo               > VARCHAR(80) required=True
-    html                 > TEXT # HTML string
-    versione             > FLOAT ?
+class Resource(models.Model):
+    id                   = models.AutoField(primary_key=True)
+    article              = models.ForeignKey(Article)
+
+class TextResource(Resource):
+    CATEGORY = (
+        (u'esegesi',        u'Esegesi'),
+        (u'storia',         u'Storia'),
+        (u'dottrina',       u'Dottrina'),
+        (u'giurisprudenza', u'Giurisprudenza'),
+        (u'normativa',      u'Normativa'),
+        (u'attualita',      u'Attualita'),
+        (u'citazione',      u'Citazione'),
+    )
+    text                 = models.TextField()
+    category             = models.CharField(max_length=50, choices=CATEGORY)
+
+class UrlResource(Resource):
+    CATEGORY = (
+       (u'link', u'link'),
+       (u'video', u'video'),
+       (u'audio', u'audio'),
+    )
+    description          = models.CharField(max_length=255)
+    url                  = models.CharField(max_length=255)
+
+class DataResource(Resource):
+    CATEGORY = (
+       (u'pdf', u'pdf'),
+       (u'csv', u'csv'),
+       (u'json', u'json'),
+    )
+    file                = models.FileField(upload_to('uploads'))
+
+class Source(models.Model):
+    TYPES = (
+        (u'legge',       u'Legge dello Stato'),
+        (u'opinione',    u'Opinione'),
+        (u'ufficiale',   u'Dichiarazione'),
+        (u'sentenza',    u'Sentenza'),
+        (u'regolamento', u'Regolamento'),
+        (u'libro',       u'Pubblicazione giuridica'),
+    )
+    referred_to          = models.ForeignKey(Resource)
+    id                   = models.AutoField(primary_key=True)
+    type                 = models.CharField(max_length=25, choices=TYPES)
+    name                 = models.CharField(max_length=50, choices=TYPES)
+    details              = models.TextField(blank=True, deafult='')
+
+class Author(models.Model):
+    TITLES = (
+        (u'prof',   u'Prof.'),
+        (u'dott',   u'Dott.'),
+        (u'avv',    u'Avv.'),
+        (u'sig',    u'Sig.'),
+        (u'sig_ra', u'Sig.ra'),
+        (u'pres',   u'Presidente'),
+        (u'ministro',   u'Ministro'),
+    )
+    FUNCTIONS = (
+        (u'governo',     u'Membro del Governo'),
+        (u'giudice',     u'Parte del Collegio giudicante'),
+        (u'funzionario', u'Funzionario'),
+        (u'profess',     u'Professionista'),
+        (u'cittadino',   u'Cittadino'),
+        
+    )
+    referred_to          = models.ForeignKey(Source)
+    id                   = models.AutoField(primary_key=True)
+    title                = models.CharField(max_length=25, choices=TITLES)
+    name                 = models.CharField(max_length=50)
+    surname              = models.CharField(max_length=50)
+    function             = models.CharField(max_length=50, choices=FUNCTIONS)
+    details              = models.TextField(blank=True, deafult='')
     
-TABLE Fonte:
-    '''
-       Tabella che descrive una fonte
-    '''
-    id                   > INT(12)
-    tipo                 > VARCHAR(50) required=True choices?=['Legge', 'Accademico', 'Commentatore', 'Costituizionalista', 'Giornalista',
-                                                         'Organo Giurisdizionale', 'TAR', 'Corte Costituzionale', 'Presidente della Repubblica']
-    dettaglio            > FK #Dettaglio
-  
-  
-TABLE Autore:
-    '''
-       Tabella che descrive un autore
-    '''
-    id                   > INT(12)
-    titolo               > VARCHAR(25) required=True choices?=['Governo', 'Parlamento', 'Prof.', 'Dott.', 'Avv.', 'Sig.', 'Sig.ra']
-    nome                 > VARCHAR(50)
-    cognome              > VARCHAR(50)
-    dettagli             > FK #Dettaglio
+class Topic(models.Model):
+    referred_to         = models.ForeignKey(Resource)
+    key                 = models.CharField(max_length=25, unique=True)
+    text                = models.TextField(blank=True, deafult='')
+
+class Page(models.Model)
+    id                  = models.AutoField(primary_key=True)
+    slug                = models.SlugField(unique=True)
+    title               = models.CharField(max_length=80)
+    version             = models.IntegerField(default=0)
+    html                = models.TextField()
     
-TABLE Argomento:
-    id                   > INT(12)
-    tag                  > VARCHAR(25)
-    dettaglio            > FK #Dettaglio
-
-TABLE Openius:
-    '''
-       Tabella delle relazioni che vanno ad ordinare i dati presenti in Openius
-    '''
-    id_articolo          > FK # ID Articolo
-    ids_risorsa          > FK # array di ID risorse
-    ids_autore           > FK # array di ID autore
-    ids__fonte           > FK # array di ID fonte
-    ids_argomento        > FK # array di ID argomento
-    id_pagina_corrente   > FK # ID versione della pagina corrente
-    
-
-
-'''
-TABLE Dati:
-  #Possibile implementazione futura
-    id                   > INT(12)
-    formato              > VARCHAR(20) choices?=['pdf', 'json', 'csv', 'xcl']
-    contenuto            >
-'''
-
