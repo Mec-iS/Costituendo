@@ -32,6 +32,10 @@ CREATE TABLE sections(
     order               INT -- Order to be able to sort in a selection
 );
 
+/*
+    ARTICLES populate LAWS
+*/
+
 CREATE TABLE articles(
     id                  SERIAL primary key,
     number              INT NOT NULL,
@@ -40,8 +44,9 @@ CREATE TABLE articles(
     section_id          > FK(sections)
 );
 
--- Resources: RESOURCES connected to some article
-
+/*
+   RESOURCES connected to ARTICLES
+*/
 CREATE TABLE resources(
     id                  SERIAL primary key,
     category_id         > FK(resource_categories),
