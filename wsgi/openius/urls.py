@@ -5,7 +5,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^start/', 'openius.views.start', name='articles'),
+    #url(r'^start/', 'openius.views.start', name='articles'),
     url(r'^$', 'openius.views.home', name='home'),
     # url(r'^openius/', include('openius.foo.urls')),
     
