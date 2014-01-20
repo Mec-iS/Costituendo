@@ -35,6 +35,7 @@ class Article(models.Model):
         ordering = ['number']
         verbose_name = 'Articolo'
         verbose_name_plural = 'Articoli'
+        unique_together = ('number', 'law')
 
     id                   = models.AutoField(primary_key=True)
     number               = models.IntegerField()
