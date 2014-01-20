@@ -65,6 +65,7 @@ class Source(models.Model):
     )
     id                   = models.AutoField(primary_key=True)
     type                 = models.CharField(max_length=50, choices=TYPES)
+    editor               = models.CharField(max_length=140)
     name                 = models.CharField(max_length=140)
     details              = models.TextField(blank=True, default='')
     added                = models.DateField(auto_now_add=True)
@@ -73,58 +74,6 @@ class Source(models.Model):
     
     def __unicode__(self):
         return self.name
-
-class Resource(models.Model):
-    class Meta:
-        verbose_name = 'Risorsa'
-        verbose_name_plural = 'Risorse'
-
-    id                   = models.AutoField(primary_key=True)
-    article              = models.ForeignKey(Article)
-    added                = models.DateField(auto_now_add=True)
-    modified             = models.DateField(auto_now=True)
-    who                  = models.CharField(max_length=100, editable=False)
-    source               = models.OneToOneField(Source)
-
-class TextResource(Resource):
-    class Meta:
-        verbose_name = 'Risorsa: testo'
-        verbose_name_plural = 'Risorsa: testo'
-        
-    CATEGORY = (
-        (u'esegesi',        u'Esegesi'),
-        (u'storia',         u'Storia'),
-        (u'dottrina',       u'Dottrina'),
-        (u'giurisprudenza', u'Giurisprudenza'),
-        (u'normativa',      u'Normativa'),
-        (u'attualita',      u"Attualita'"),
-        (u'citazione',      u'Citazione'),
-    )
-    text                 = models.TextField()
-    category             = models.CharField(max_length=50, choices=CATEGORY)
-
-class UrlResource(Resource):
-    class Meta:
-        verbose_name = 'Risorsa: link'
-        verbose_name_plural = 'Risorsa: links'
-    CATEGORY = (
-       (u'link', u'link'),
-       (u'video', u'video'),
-       (u'audio', u'audio'),
-    )
-    description          = models.CharField(max_length=255)
-    url                  = models.CharField(max_length=255)
-    category             = models.CharField(max_length=80, choices=CATEGORY)
-        
-    def __unicode__(self):
-        description = self.description
-        description = description.split()
-        return '-'.join(description[0:10])
-    
-    def __str__(self):
-        description = self.description
-        description = description.split()
-        return '-'.join(description[0:3])
 
 class Author(models.Model):
     class Meta:
@@ -148,7 +97,6 @@ class Author(models.Model):
         (u'cittadino',   u'Cittadino'),
         
     )
-    referred_to          = models.ForeignKey(Source)
     id                   = models.AutoField(primary_key=True)
     title                = models.CharField(max_length=50, choices=TITLES)
     name                 = models.CharField(max_length=140)
@@ -158,9 +106,68 @@ class Author(models.Model):
     added                = models.DateField(auto_now_add=True)
     modified             = models.DateField(auto_now=True)
     who                  = models.CharField(max_length=100, editable=False)
+    source               = models.ForeignKey(Source)
     
     def __unicode__(self):
-        return self.name+' '+self.surname
+        return self.name+'_'+self.surname+'@'+self.source.editor
+        
+class Resource(models.Model):
+    class Meta:
+        verbose_name = 'Risorsa'
+        verbose_name_plural = 'Risorse'
+
+    id                   = models.AutoField(primary_key=True)
+    article              = models.ForeignKey(Article)
+    added                = models.DateField(auto_now_add=True)
+    modified             = models.DateField(auto_now=True)
+    who                  = models.CharField(max_length=100, editable=False)
+    source               = models.OneToOneField(Source)
+    author               = models.ManyToManyField(Author)
+    
+
+class TextResource(Resource):
+    class Meta:
+        verbose_name = 'Risorsa: testo'
+        verbose_name_plural = 'Risorsa: testo'
+        
+    CATEGORY = (
+        (u'esegesi',        u'Esegesi'),
+        (u'storia',         u'Storia'),
+        (u'dottrina',       u'Dottrina'),
+        (u'giurisprudenza', u'Giurisprudenza'),
+        (u'normativa',      u'Normativa'),
+        (u'attualita',      u"Attualita'"),
+        (u'citazione',      u'Citazione'),
+    )
+    text                 = models.TextField()
+    category             = models.CharField(max_length=50, choices=CATEGORY)
+
+class UrlResource(Resource):
+    class Meta:
+        verbose_name = 'Risorsa: link'
+        verbose_name_plural = 'Risorsa: link'
+    CATEGORY = (
+       (u'link', u'articolo'),
+       (u'video', u'video'),
+       (u'audio', u'audio'),
+    )
+    description          = models.CharField(max_length=255)
+    url                  = models.CharField(max_length=255)
+    category             = models.CharField(max_length=80, choices=CATEGORY)
+        
+    def __unicode__(self):
+        description = self.description
+        description = description.split()
+        returning = '-'.join(description[0:5])
+        returning = returning+'...'+'@'+self.url[0:20]+'...'
+        return returning
+    
+    def __str__(self):
+        description = self.description
+        description = description.split()
+        returning = '-'.join(description[0:5])
+        returning = returning+'...'+'@'+self.url[0:20]+'...'
+        return returning
     
 class Topic(models.Model):
     class Meta:
