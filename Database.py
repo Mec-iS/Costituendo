@@ -47,7 +47,8 @@ class Article(models.Model):
     
     def __unicode__(self):
         number = str(self.number)
-        return number
+        law = self.law.name
+        return law+' n.'+number
 
 class Source(models.Model):
     class Meta:
@@ -62,6 +63,7 @@ class Source(models.Model):
         (u'regolamento', u'Regolamento'),
         (u'libro',       u'Pubblicazione giuridica'),
         (u'stampa',      u'Stampa/Blog'),
+        (u'redazione',      u'Redazione OpenIUS'),
     )
     id                   = models.AutoField(primary_key=True)
     type                 = models.CharField(max_length=50, choices=TYPES)
@@ -110,6 +112,21 @@ class Author(models.Model):
     
     def __unicode__(self):
         return self.name+'_'+self.surname+'@'+self.source.editor
+
+class Topic(models.Model):
+    class Meta:
+        verbose_name = 'Argomento'
+        verbose_name_plural = 'Argomenti'
+
+    id                   = models.AutoField(primary_key=True)
+    key                  = models.CharField(max_length=50, unique=True)
+    text                 = models.TextField(blank=True, default='')
+    added                = models.DateField(auto_now_add=True)
+    modified             = models.DateField(auto_now=True)
+    who                  = models.CharField(max_length=100, editable=False)
+    
+    def __unicode__(self):
+        return self.key
         
 class Resource(models.Model):
     class Meta:
@@ -123,6 +140,7 @@ class Resource(models.Model):
     who                  = models.CharField(max_length=100, editable=False)
     source               = models.OneToOneField(Source)
     author               = models.ManyToManyField(Author)
+    topics               = models.ManyToManyField(Topic, default=None, null=True, blank=True)
     
 
 class TextResource(Resource):
@@ -141,6 +159,14 @@ class TextResource(Resource):
     )
     text                 = models.TextField()
     category             = models.CharField(max_length=50, choices=CATEGORY)
+    
+    def __unicode__(self):
+        returning = self.text[0:35]+'...'+'/'+self.category
+        return returning
+    
+    def __str__(self):
+        returning = self.text[0:35]+'...'+'/'+self.category
+        return returning
 
 class UrlResource(Resource):
     class Meta:
@@ -168,21 +194,6 @@ class UrlResource(Resource):
         returning = '-'.join(description[0:5])
         returning = returning+'...'+'@'+self.url[0:20]+'...'
         return returning
-    
-class Topic(models.Model):
-    class Meta:
-        verbose_name = 'Argomento'
-        verbose_name_plural = 'Argomenti'
-
-    referred_to          = models.ForeignKey(Resource)
-    key                  = models.CharField(max_length=50, unique=True)
-    text                 = models.TextField(blank=True, default='')
-    added                = models.DateField(auto_now_add=True)
-    modified             = models.DateField(auto_now=True)
-    who                  = models.CharField(max_length=100, editable=False)
-    
-    def __unicode__(self):
-        return self.key
 
 class Page(models.Model):
     id                   = models.AutoField(primary_key=True)
