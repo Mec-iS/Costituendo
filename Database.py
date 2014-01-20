@@ -2,7 +2,10 @@ from django.db import models
 
 # !!! DEFAULT IS NULL=FALSE !!! 
 class Law(models.Model):
-    id                   = models.AutoField(primary_key=True)
+    class Meta:
+        verbose_name = 'Codice'
+        verbose_name_plural = 'Codici'
+        
     name                 = models.CharField(max_length=50)
     became               = models.DateField()
     
@@ -10,53 +13,47 @@ class Law(models.Model):
         return self.name
 
 class Section(models.Model):
+    class Meta:
+        verbose_name = 'Sezione'
+        verbose_name_plural = 'Sezioni'
+    
     id                   = models.AutoField(primary_key=True)
-    law_id               = models.ForeignKey(Law)
-    parent_id            = models.ForeignKey('self', null=True, blank=True, default=None)
+    law                  = models.ForeignKey(Law)
+    parent               = models.ForeignKey('self', default=None, null=True, blank=True)
     name                 = models.CharField(max_length=140)
     description          = models.CharField(max_length=140, blank=True, default='')
     order                = models.IntegerField()
+    added                = models.DateField(auto_now_add=True)
+    modified             = models.DateField(auto_now=True)
+    who                  = models.CharField(max_length=100, editable=False)
     
     def __unicode__(self):
         return self.name
     
 class Article(models.Model):
+    class Meta:
+        ordering = ['number']
+        verbose_name = 'Articolo'
+        verbose_name_plural = 'Articoli'
+
     id                   = models.AutoField(primary_key=True)
     number               = models.IntegerField()
     text                 = models.TextField()
-    law_id               = models.ForeignKey(Law)
-    section_id           = models.ForeignKey(Section)
+    law                  = models.ForeignKey(Law)
+    section              = models.ForeignKey(Section)
+    added                = models.DateField(auto_now_add=True)
+    modified             = models.DateField(auto_now=True)
+    who                  = models.CharField(max_length=100, editable=False)
     
     def __unicode__(self):
-        return self.number
-    
-class Resource(models.Model):
-    id                   = models.AutoField(primary_key=True)
-    article              = models.ForeignKey(Article)
-
-class TextResource(Resource):
-    CATEGORY = (
-        (u'esegesi',        u'Esegesi'),
-        (u'storia',         u'Storia'),
-        (u'dottrina',       u'Dottrina'),
-        (u'giurisprudenza', u'Giurisprudenza'),
-        (u'normativa',      u'Normativa'),
-        (u'attualita',      u'Attualita'),
-        (u'citazione',      u'Citazione'),
-    )
-    text                 = models.TextField()
-    category             = models.CharField(max_length=50, choices=CATEGORY)
-
-class UrlResource(Resource):
-    CATEGORY = (
-       (u'link', u'link'),
-       (u'video', u'video'),
-       (u'audio', u'audio'),
-    )
-    description          = models.CharField(max_length=255)
-    url                  = models.CharField(max_length=255)
+        number = str(self.number)
+        return number
 
 class Source(models.Model):
+    class Meta:
+        verbose_name = 'Fonte'
+        verbose_name_plural = 'Fonti'
+
     TYPES = (
         (u'legge',       u'Legge dello Stato'),
         (u'opinione',    u'Opinione'),
@@ -64,14 +61,76 @@ class Source(models.Model):
         (u'sentenza',    u'Sentenza'),
         (u'regolamento', u'Regolamento'),
         (u'libro',       u'Pubblicazione giuridica'),
+        (u'stampa',      u'Stampa/Blog'),
     )
-    referred_to          = models.ForeignKey(Resource)
     id                   = models.AutoField(primary_key=True)
     type                 = models.CharField(max_length=50, choices=TYPES)
-    name                 = models.CharField(max_length=140, choices=TYPES)
+    name                 = models.CharField(max_length=140)
     details              = models.TextField(blank=True, default='')
+    added                = models.DateField(auto_now_add=True)
+    modified             = models.DateField(auto_now=True)
+    who                  = models.CharField(max_length=100, editable=False)
+    
+    def __unicode__(self):
+        return self.name
+
+class Resource(models.Model):
+    class Meta:
+        verbose_name = 'Risorsa'
+        verbose_name_plural = 'Risorse'
+
+    id                   = models.AutoField(primary_key=True)
+    article              = models.ForeignKey(Article)
+    added                = models.DateField(auto_now_add=True)
+    modified             = models.DateField(auto_now=True)
+    who                  = models.CharField(max_length=100, editable=False)
+    source               = models.OneToOneField(Source)
+
+class TextResource(Resource):
+    class Meta:
+        verbose_name = 'Risorsa: testo'
+        verbose_name_plural = 'Risorsa: testo'
+        
+    CATEGORY = (
+        (u'esegesi',        u'Esegesi'),
+        (u'storia',         u'Storia'),
+        (u'dottrina',       u'Dottrina'),
+        (u'giurisprudenza', u'Giurisprudenza'),
+        (u'normativa',      u'Normativa'),
+        (u'attualita',      u"Attualita'"),
+        (u'citazione',      u'Citazione'),
+    )
+    text                 = models.TextField()
+    category             = models.CharField(max_length=50, choices=CATEGORY)
+
+class UrlResource(Resource):
+    class Meta:
+        verbose_name = 'Risorsa: link'
+        verbose_name_plural = 'Risorsa: links'
+    CATEGORY = (
+       (u'link', u'link'),
+       (u'video', u'video'),
+       (u'audio', u'audio'),
+    )
+    description          = models.CharField(max_length=255)
+    url                  = models.CharField(max_length=255)
+    category             = models.CharField(max_length=80, choices=CATEGORY)
+        
+    def __unicode__(self):
+        description = self.description
+        description = description.split()
+        return '-'.join(description[0:10])
+    
+    def __str__(self):
+        description = self.description
+        description = description.split()
+        return '-'.join(description[0:3])
 
 class Author(models.Model):
+    class Meta:
+        verbose_name = 'Autore'
+        verbose_name_plural = 'Autori'
+
     TITLES = (
         (u'prof',   u'Prof.'),
         (u'dott',   u'Dott.'),
@@ -96,18 +155,36 @@ class Author(models.Model):
     surname              = models.CharField(max_length=140)
     function             = models.CharField(max_length=140, choices=FUNCTIONS)
     details              = models.TextField(blank=True, default='')
+    added                = models.DateField(auto_now_add=True)
+    modified             = models.DateField(auto_now=True)
+    who                  = models.CharField(max_length=100, editable=False)
+    
+    def __unicode__(self):
+        return self.name+' '+self.surname
     
 class Topic(models.Model):
-    referred_to         = models.ForeignKey(Resource)
-    key                 = models.CharField(max_length=50, unique=True)
-    text                = models.TextField(blank=True, default='')
+    class Meta:
+        verbose_name = 'Argomento'
+        verbose_name_plural = 'Argomenti'
+
+    referred_to          = models.ForeignKey(Resource)
+    key                  = models.CharField(max_length=50, unique=True)
+    text                 = models.TextField(blank=True, default='')
+    added                = models.DateField(auto_now_add=True)
+    modified             = models.DateField(auto_now=True)
+    who                  = models.CharField(max_length=100, editable=False)
+    
+    def __unicode__(self):
+        return self.key
 
 class Page(models.Model):
-    id                  = models.AutoField(primary_key=True)
-    slug                = models.SlugField(unique=True)
-    title               = models.CharField(max_length=140)
-    version             = models.IntegerField(default=0)
-    html                = models.TextField()
+    id                   = models.AutoField(primary_key=True)
+    slug                 = models.SlugField(unique=True)
+    title                = models.CharField(max_length=140)
+    version              = models.IntegerField(default=0)
+    html                 = models.TextField()
+    added                = models.DateField(auto_now_add=True)
+    modified             = models.DateField(auto_now=True)
     
 '''
 class DataResource(Resource):
